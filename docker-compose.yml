@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  db:
+    build: .
+    image: server-db:latest
+    container_name: mssql-prov
+    environment:
+      SA_PASSWORD: ${SA_PASSWORD}
+      PATCH_HISTORY_DB: master
+      PATCH_HISTORY_TABLE: PATCH_HISTORY
+    volumes:
+      - mssql:/var/opt/mssql
+    ports:
+      - "1433:1433"
+
+volumes:
+  mssql:
+    name: mssql
