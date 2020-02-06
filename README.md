@@ -29,6 +29,13 @@ The provision files for the database should result in the desired schema, so whe
 
 ## Why?
 
-I needed a quick way to easily manage my database when prototyping.
-Allows for database schema and changes to that schema to be committed to source control.
-Makes fresh deployment of a database simple and reproducible.
+- I needed a quick way to easily manage my database when prototyping
+- Allows for database schema and changes to that schema to be committed to source control
+- Allows deployment of latest/specific versions of the database to be simple and reproducible
+
+## Why not?
+
+- Requires rebuilding the DB container to apply updates
+- Hosting your database in a container gives way to data persistence concerns
+	- The example uses docker volumes to persist the db
+- It makes the database team (rightfully) mad when you run everything all on your own.
