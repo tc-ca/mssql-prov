@@ -4,6 +4,7 @@
 if [ $? -ne 0 ] ; then
 	echo "Could not find patch history, performing first time setup provision."
 	. /app/provision.sh
+	echo "Spoofing patch logs ...";
 	logOnly=1 # Provision step makes patching redundant, populate the table so the patches won't be run on future startups.
 fi
 

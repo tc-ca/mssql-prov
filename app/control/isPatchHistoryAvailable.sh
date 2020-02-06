@@ -4,10 +4,7 @@ IF DB_ID(\'$(PATCH_HISTORY_DB)\') IS NULL BEGIN
 	RAISERROR (\'Patch history db doesn\'\'t exist!\', 1,1)
 END
 
-USE [$(PATCH_HISTORY_DB)]
-GO
-
-IF OBJECT_ID(\'$(PATCH_HISTORY_TABLE)\') IS NULL BEGIN
+IF OBJECT_ID(\'[$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]\') IS NULL BEGIN
 	RAISERROR (\'Patch history table doesn\'\'t exist!\',1,1)
 END
 ' #> /dev/null

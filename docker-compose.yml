@@ -7,7 +7,8 @@ services:
     container_name: mssql-prov
     environment:
       SA_PASSWORD: ${SA_PASSWORD}
-      PATCH_HISTORY_DB: master
+      # PATCH_HISTORY_DB: master
+      # PATCH_HISTORY_SCHEMA: dbo
       PATCH_HISTORY_TABLE: PATCH_HISTORY
     volumes:
       - mssql:/var/opt/mssql
