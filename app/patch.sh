@@ -8,7 +8,7 @@ for dir in /app/patch/*; do
 		echo "Patch ${dir} missing comments file!";
 	else
 		echo "Checking for patch ${dir}..."
-		. /app/control/isPatchAlreadyApplied.sh "'$dir'"
+		. /app/control/isPatchAlreadyApplied.sh "$dir"
 		if [ $? -ne 0 ]; then
 			echo "Patch ${dir} already applied!"
 		else
