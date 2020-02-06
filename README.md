@@ -14,7 +14,7 @@ Additionally, there is a [patchdemo.sh](example/patchdemo.sh) script that demons
 3. The provision scripts are updated to reflect the desired state of the database
 4. A patch is created that will upgrade the db from its existing state to the desired state
 5. DB container is rebuilt with the new patch included
-6. Once the new container is ran, the DB will apply any new patches
+6. Once the new container is started, the DB will apply any new patches
 
 ## How it works
 
@@ -25,7 +25,7 @@ This script is responsible for:
 - First-time setup of the database (create the patch_history table)
 - Identification and execution of unapplied patches
 
-The provision files for the database should result in the desired schema, so when doing a first-run, the script will pretend to execute all existing patches so that they aren't ran in the future (since the db will already be in the desired state).
+The provision files for the database should result in the desired schema, so when doing a first-run, the script will pretend to execute all existing patches so that they aren't executed in the future (since the db will already be in the desired state).
 
 ## Why?
 
@@ -36,6 +36,5 @@ The provision files for the database should result in the desired schema, so whe
 ## Why not?
 
 - Requires rebuilding the DB container to apply updates
-- Hosting your database in a container gives way to data persistence concerns
-	- The example uses docker volumes to persist the db
+- Hosting your database in a container gives way to data persistence concerns - The example uses docker volumes to persist the db
 - It makes the database team (rightfully) mad when you run everything all on your own.
