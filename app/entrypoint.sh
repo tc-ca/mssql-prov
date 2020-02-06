@@ -1,12 +1,4 @@
-echo "Waiting for MS SQL to be available ⏳"
-. /app/control/isAvailable.sh
-is_up=$?
-while [ $is_up -ne 0 ] ; do 
-	echo "Waiting for MS SQL to be available ⏳"
-	sleep 1
-	. /app/control/isAvailable.sh
-	is_up=$?
-done
+. /app/control/awaitServer.sh
 
 . /app/control/isPatchHistoryAvailable.sh
 if [ $? -ne 0 ] ; then
@@ -19,7 +11,5 @@ fi
 if [ $? -ne 0 ] ; then
 	echo "Patch history is missing. Please ensure the provision step creates the table properly."
 else 
-	echo "Server is up! Beginning patch step."
 	. /app/patch.sh
-	echo "Server is patched!"
 fi

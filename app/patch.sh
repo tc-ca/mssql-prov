@@ -1,3 +1,4 @@
+echo "Beginning patch step ...";
 for dir in /app/patch/*; do
 	if ! [ -d "$dir" ]; then
 		echo "Patcher encountered file, should be dir instead! ($dir)";
@@ -28,3 +29,4 @@ for dir in /app/patch/*; do
 		fi	
 	fi
 done
+echo "Patching complete!";
