@@ -20,4 +20,4 @@ RUN chmod +x -R /app/*.sh
 
 EXPOSE 1433
 
-CMD /bin/bash -c "/app/patch.sh & /opt/mssql/bin/sqlservr"
+CMD /bin/bash -c "/app/entrypoint.sh & /opt/mssql/bin/sqlservr"
