@@ -9,7 +9,7 @@ fi
 
 . /app/control/isPatchHistoryAvailable.sh
 if [ $? -ne 0 ] ; then
-	echo "Patch history is missing. Please ensure the provision step creates the table properly."
+	echo "Patch history table or db is missing. Please ensure the provision step creates the database and table properly."
 else 
 	. /app/patch.sh
 fi
