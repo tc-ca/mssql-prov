@@ -3,7 +3,7 @@ version: "3.7"
 services:
   db:
     build: .
-    image: server-db:latest
+    image: teamdman/mssql-prov:latest
     container_name: mssql-prov
     environment:
       SA_PASSWORD: ${SA_PASSWORD}
