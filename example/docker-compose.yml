@@ -3,8 +3,8 @@ version: "3.7"
 services:
   db:
     build: .
-    image: teamdman/mssql-prov:latest
-    container_name: mssql-prov
+    image: my-provisioned-db:latest
+    container_name: myDB
     environment:
       SA_PASSWORD: ${SA_PASSWORD}
       # PATCH_HISTORY_DB: master
@@ -17,4 +17,4 @@ services:
 
 volumes:
   mssql:
-    name: mssql
+    name: my-provisioned-db
