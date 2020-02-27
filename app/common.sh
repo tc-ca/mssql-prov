@@ -55,3 +55,19 @@ function logPatch {
 	';
 	echo "Patch ${filename} applied!";
 }
+
+function applyDir {
+	find "$1" -type f \( -name "*.sh" -o -name "*.sh" \) -print0 | sort -t '\0' |
+	while IFS= read -r -d '' file; do
+		case $file in
+			*.sh)
+				echo "Discovered shell file $file";
+				source "$file";
+				;;
+			*.sql)
+				echo "Discovered sql file $file";
+				sql -e -i "$file";
+				;;
+		esac
+	done
+}

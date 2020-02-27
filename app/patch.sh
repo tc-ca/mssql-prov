@@ -10,19 +10,7 @@ for dir in /app/patch/*; do
 		echo "Checking for patch ${dir}...";
 		if checkPatchUnapplied "$dir"; then
 			echo "Patch ${dir} not yet applied!";
-			find "$dir" -type f \( -name "*.sh" -o -name "*.sh" \) -print0 | sort -t '\0' |
-			while IFS= read -r -d '' file; do
-				case $file in
-					*.sh)
-						echo "Discovered patch shell file $file";
-						source "$file";
-						;;
-					*.sql)
-						echo "Discovered patch sql file $file";
-						sql -e -i "$file";
-						;;
-				esac
-			done
+			applyDir "$dir";
 			logPatch "$dir" "$(cat "$dir/version")" "$(cat "$dir/comments")";
 		else
 			echo "Patch ${dir} already applied!";
