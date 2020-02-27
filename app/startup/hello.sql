@@ -1,2 +1,0 @@
-SELECT 'Hello, startup!'
-GO
