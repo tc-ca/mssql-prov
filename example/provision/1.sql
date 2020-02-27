@@ -1,2 +1,2 @@
-SELECT 'no provision needed'
+SELECT 'no additional provisioning needed'
 GO
