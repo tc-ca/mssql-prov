@@ -46,12 +46,12 @@ function logPatch {
 	export filename=$1;
 	export version=$2;
 	export comments=$3;
-	sql -Q '
+	sql -Q $'
 		SET NOCOUNT ON
 
 		INSERT INTO [$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]
 		(PATCH_FILE_NM, APPLIED_DTE, VERSION_CD, COMMENTS_TXT)
-		VALUES ($(filename), GETDATE(), $(version), $(comments))
+		VALUES (\'$(filename)\', GETDATE(), \'$(version)\', \'$(comments)\')
 	';
 	echo "Patch ${filename} applied!";
 }
