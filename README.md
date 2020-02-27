@@ -47,7 +47,7 @@ ADD ./provision/ /app/provision/
 Environment variables:
 
 ```ino
-SA_PASSWORD=YourPasswordHere
+SA_PASSWORD=<YourStrong@Passw0rd>
 ```
 
 [_NOTE: The password should follow the SQL Server default password policy, otherwise the container can not setup SQL server and will stop working. By default, the password must be at least 8 characters long and contain characters from three of the following four sets: Uppercase letters, Lowercase letters, Base 10 digits, and Symbols. You can examine the error log by executing the docker logs command._](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash)
