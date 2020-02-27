@@ -32,6 +32,9 @@ Specifically, they are ran when the table that tracks the applied patches is not
 The items in the patch directory are executed every time the server starts, if they have not executed before.\
 The executed patches are tracked in a table created by the provided provision script.
 
+Items in both cases are discovered recursively with `find`, and then sorted alphabetically before being executed.\
+This should allow for grouping scripts inside of large patches using nested directories if desired.
+
 Dockerfile:
 
 ```dockerfile
