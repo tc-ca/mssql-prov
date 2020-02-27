@@ -1,3 +1,3 @@
-echo "Beginning provision step ..."
+echo "Beginning provision step ...";
 applyDir "/app/provision";
-echo "Server is provisioned!"
+echo "Server is provisioned!";
