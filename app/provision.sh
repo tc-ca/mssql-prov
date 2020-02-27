@@ -1,5 +1,6 @@
 echo "Beginning provision step ..."
-for file in $(find -name "*.sql" "/app/provision/"); do
-	/opt/mssql-tools/bin/sqlcmd -X -S localhost,1433 -U SA -P $SA_PASSWORD -l 30 -e -i "$file";
+find "/app/provision" -type f -name "*.sql" -print0 | 
+while IFS= read -r -d '' file; do
+	sql -e -i $file;
 done
 echo "Server is provisioned!"

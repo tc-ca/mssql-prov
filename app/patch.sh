@@ -8,20 +8,23 @@ for dir in /app/patch/*; do
 		echo "Patch ${dir} missing comments file!";
 	else
 		echo "Checking for patch ${dir}...";
-		checkPatchApplied "$dir";
-		if [ $? -ne 0 ]; then
-			echo "Patch ${dir} already applied!";
-		else
+		if checkPatchUnapplied "$dir"; then
 			echo "Patch ${dir} not yet applied!";
-			for file in $(find -name "*.sh" "$dir"); do
-				echo "Discovered patch sh file ($file)";
-				[ -z $logOnly ] && source "$file";
+			find "$dir" -type f -name "*.sh" -print0 |
+			while IFS= read -r -d '' file; do
+				echo "Discovered patch shell file $file";
+				source $file;
+			
 			done
-			for file in $(find -name "*.sql" "$dir"); do
-				echo "Discovered patch sql file $(file)";
-				[ -z $logOnly ] && sql -e -i "$file"
+			
+			find "$dir" -type f -name "*.sql" -print0 |
+			while IFS= read -r -d '' file; do
+				echo "Discovered patch sql file $file";
+				sql -e -i "$file";
 			done
 			logPatch "$dir" "$(cat "$dir/version")" "$(cat "$dir/comments")";
+		else
+			echo "Patch ${dir} already applied!";
 		fi	
 	fi
 done

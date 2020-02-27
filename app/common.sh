@@ -1,25 +1,20 @@
-function sql {
-	/opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U SA -P $SA_PASSWORD -l 30 -h-1 -V1 $@;
-}
+shopt -s expand_aliases;
+alias sql='/opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U SA -P $SA_PASSWORD -l 30 -h-1 -V1';
 
 function checkServerStatus {
-	sql -Q "SET NOCOUNT ON SELECT @@servername" > /dev/null;
+	sql -Q "SET NOCOUNT ON SELECT @@servername" > /dev/null && return 0 || return 1;
 }
 
 function awaitServer {
 	echo "Waiting for MS SQL to be available ⏳";
-	checkServerStatus;
-	is_up=$?;
-	while [ $is_up -ne 0 ] ; do 
+	until checkServerStatus; do 
 		echo "Waiting for MS SQL to be available ⏳";
 		sleep 1;
-		checkServerStatus;
-		is_up=$?;
 	done
 	echo "Server is up!";
 }
 
-function checkPatchApplied {
+function checkPatchUnapplied {
 	export name=$1
 	sql -Q $'
 		SET NOCOUNT ON
@@ -31,7 +26,7 @@ function checkPatchApplied {
 		) BEGIN
 			RAISERROR (\'Patch already applied!\',1,1)
 		END
-	' #> /dev/null
+	' && return 0 || return 1;#> /dev/null
 }
 
 function checkPatchTable {
@@ -44,7 +39,7 @@ function checkPatchTable {
 		IF OBJECT_ID(\'[$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]\') IS NULL BEGIN
 			RAISERROR (\'Patch history table doesn\'\'t exist!\',1,1)
 		END
-	'; #> /dev/null
+	' && return 0 || return 1; #> /dev/null
 }
 
 function logPatch {
