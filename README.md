@@ -4,37 +4,51 @@ A docker container that allows for easy provisioning and patching of Microsoft S
 
 ## Usage
 
-The [example/](example/) directory contains an example dockerfile demonstrating how to use this image.
-Additionally, there is a [patchdemo.sh](example/patchdemo.sh) script that demonstrates how patches are applied.
+```
+yourapp
+├── Dockerfile
+├── patch
+│   ├── patch name
+│   │   ├── patch.sql
+│   │   ├── comments
+│   │   └── version
+│   ├── patch name
+│   │   ├── patch.sql
+│   │   ├── comments
+│   │   └── version
+│   └── patch name
+│       ├── run.sh
+│       ├── comments
+│       └── version
+└── provision
+    ├── a.sql
+    ├── b.sh
+    └── c.sql
+```
 
-## General use case:
+The items in the provision directory are executed once when the server starts for the first time.\
+Specifically, they are ran when the table that tracks the applied patches is not detected.
 
-1. Create provision scripts that set up your database (e.g., ERwin forward-engineer, writing by hand)
-2. Time passes. A change to the DB schema becomes required
-3. The provision scripts are updated to reflect the desired state of the database
-4. A patch is created that will upgrade the db from its existing state to the desired state
-5. DB container is rebuilt with the new patch included
-6. Once the new container is started, the DB will apply any new patches
+The items in the patch directory are executed every time the server starts, if they have not executed before.\
+The executed patches are tracked in a table created by the provided provision script.
 
-## How it works
+Dockerfile:
 
-When the container starts up, it's running a bash script in addition to the script running the MSSQL instance.\
-This script is responsible for:
+```dockerfile
+FROM teamdman/mssql-prov:latest
+WORKDIR /app/
+ADD ./patch/ /app/patch/
+ADD ./provision/ /app/provision/
+```
 
-- Detecting first-run of the database (does the patch_history table exist yet)
-- First-time setup of the database (create the patch_history table)
-- Identification and execution of unapplied patches
+Environment variables:
 
-The provision files for the database should result in the desired schema, so when doing a first-run, the script will pretend to execute all existing patches so that they aren't executed in the future (since the db will already be in the desired state).
+```ino
+SA_PASSWORD=YourPasswordHere
+```
 
-## Why?
+[_NOTE: The password should follow the SQL Server default password policy, otherwise the container can not setup SQL server and will stop working. By default, the password must be at least 8 characters long and contain characters from three of the following four sets: Uppercase letters, Lowercase letters, Base 10 digits, and Symbols. You can examine the error log by executing the docker logs command._](https://docs.microsoft.com/en-us/sql/linux/quickstart-install-connect-docker?view=sql-server-2017&pivots=cs1-bash)
 
-- I needed a quick way to easily manage my database when prototyping
-- Allows for database schema and changes to that schema to be committed to source control
-- Allows deployment of latest/specific versions of the database to be simple and reproducible
+## Example
 
-## Why not?
-
-- Requires rebuilding the DB container to apply updates
-- Hosting your database in a container gives way to data persistence concerns - The example uses docker volumes to persist the db
-- It makes the database team (rightfully) mad when you run everything all on your own.
+[See the provided example.](/example)
