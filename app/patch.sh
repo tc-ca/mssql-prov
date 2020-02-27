@@ -7,25 +7,21 @@ for dir in /app/patch/*; do
 	elif ! [ -e "$dir/comments" ]; then
 		echo "Patch ${dir} missing comments file!";
 	else
-		echo "Checking for patch ${dir}..."
-		. /app/control/isPatchAlreadyApplied.sh "$dir"
+		echo "Checking for patch ${dir}...";
+		checkPatchApplied "$dir";
 		if [ $? -ne 0 ]; then
-			echo "Patch ${dir} already applied!"
+			echo "Patch ${dir} already applied!";
 		else
-			echo "Patch ${dir} not yet applied!"
-			if [ -z $logOnly ]; then 
-				if [ -e "$dir/run.sh" ]; then
-					. "$dir/run.sh"
-				else
-					echo "No patch run.sh found, sequencing *.sql files instead."
-					cd "$dir"
-					for file in *.sql; do
-						/opt/mssql-tools/bin/sqlcmd -X -S localhost,1433 -U SA -P $SA_PASSWORD -l 30 -e -i "$file"
-					done
-					cd ..
-				fi
-			fi
-			. /app/control/logPatch.sh "'$dir'" "'$(cat "$dir/version")'" "'$(cat "$dir/comments")'"
+			echo "Patch ${dir} not yet applied!";
+			for file in $(find -name "*.sh" "$dir"); do
+				echo "Discovered patch sh file ($file)";
+				[ -z $logOnly ] && source "$file";
+			done
+			for file in $(find -name "*.sql" "$dir"); do
+				echo "Discovered patch sql file $(file)";
+				[ -z $logOnly ] && sql -e -i "$file"
+			done
+			logPatch "$dir" "$(cat "$dir/version")" "$(cat "$dir/comments")";
 		fi	
 	fi
 done

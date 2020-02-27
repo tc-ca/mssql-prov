@@ -1,0 +1,2 @@
+SELECT 'Hello, startup!'
+GO
