@@ -1,0 +1,5 @@
+CREATE TABLE master.dbo.MAGIC
+(
+	WORD NVARCHAR(32)
+)
+GO

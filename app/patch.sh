@@ -10,6 +10,7 @@ for dir in /app/patch/*; do
 		echo "Checking for patch ${dir}...";
 		if checkPatchUnapplied "$dir"; then
 			echo "Patch ${dir} not yet applied!";
+			cd "$dir";
 			applyDir "$dir";
 			logPatch "$dir" "$(cat "$dir/version")" "$(cat "$dir/comments")";
 		else
