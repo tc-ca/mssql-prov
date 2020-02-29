@@ -7,12 +7,14 @@ for dir in /app/patch/*; do
 	elif ! [ -e "$dir/comments" ]; then
 		echo "Patch ${dir} missing comments file!";
 	else
+		version="$(cat "$dir/version")";
+		comments="$(cat "$dir/comments")";
 		echo "Checking for patch ${dir}...";
-		if checkPatchUnapplied "$dir"; then
+		if checkPatchUnapplied "$version"; then
 			echo "Patch ${dir} not yet applied!";
 			cd "$dir";
 			applyDir "$dir";
-			logPatch "$dir" "$(cat "$dir/version")" "$(cat "$dir/comments")";
+			logPatch "$dir" "$version" "$comments";
 		else
 			echo "Patch ${dir} already applied!";
 		fi	

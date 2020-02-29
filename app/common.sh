@@ -15,14 +15,14 @@ function awaitServer {
 }
 
 function checkPatchUnapplied {
-	export name=$1
+	export version=$1
 	sql -Q $'
 		SET NOCOUNT ON
 
 		IF EXISTS(
 			SELECT 1
 			FROM [$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]
-			WHERE PATCH_FIlE_NM=\'$(name)\'
+			WHERE PATCH_VERSION_CD=\'$(version)\'
 		) BEGIN
 			RAISERROR (\'Patch already applied!\',1,1)
 		END
@@ -50,8 +50,8 @@ function logPatch {
 		SET NOCOUNT ON
 
 		INSERT INTO [$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]
-		(PATCH_FILE_NM, APPLIED_DTE, VERSION_CD, COMMENTS_TXT)
-		VALUES (\'$(filename)\', GETDATE(), \'$(version)\', \'$(comments)\')
+		(PATCH_VERSION_CD, PATCH_FILE_NM, PATCH_COMMENTS_TXT)
+		VALUES (\'$(version)\', \'$(filename)\', \'$(comments)\')
 	';
 	echo "Patch ${filename} applied!";
 }
