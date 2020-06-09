@@ -15,14 +15,16 @@ function awaitServer {
 }
 
 function checkPatchUnapplied {
-	export version=$1
+	export file="$1";
+	export hash="$2";
 	sql -Q $'
 		SET NOCOUNT ON
 
 		IF EXISTS(
 			SELECT 1
 			FROM [$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]
-			WHERE PATCH_VERSION_CD=\'$(version)\'
+			WHERE PATCH_FILE_NM=\'$(file)\'
+			  AND PATCH_HASH_TXT=\'$(hash)\'
 		) BEGIN
 			RAISERROR (\'Patch already applied!\',1,1)
 		END
@@ -43,15 +45,15 @@ function checkPatchTable {
 }
 
 function logPatch {
-	export filename=$1;
-	export version=$2;
-	export comments=$3;
+	export filename="$1";
+	export hash="$2";
+	export comments="$3";
 	sql -Q $'
 		SET NOCOUNT ON
 
 		INSERT INTO [$(PATCH_HISTORY_DB)].[$(PATCH_HISTORY_SCHEMA)].[$(PATCH_HISTORY_TABLE)]
-		(PATCH_VERSION_CD, PATCH_FILE_NM, PATCH_COMMENTS_TXT)
-		VALUES (\'$(version)\', \'$(filename)\', \'$(comments)\')
+		(PATCH_FILE_NM, PATCH_HASH_TXT, PATCH_COMMENTS_TXT)
+		VALUES (\'$(filename)\', \'$(hash)\', \'$(comments)\')
 	';
 	echo "Patch ${filename} applied!";
 }
@@ -71,4 +73,16 @@ function applyDir {
 				;;
 		esac
 	done
+}
+
+function getDirHash {
+	#https://stackoverflow.com/questions/545387/linux-compute-a-single-hash-for-a-given-folder-contents
+	#https://unix.stackexchange.com/questions/487028/print-sha-sums-without-at-the-end
+	dir="$1";
+	h=($((
+		find "$dir" -type f -print0  | sort -z | xargs -0 sha1sum;
+		find "$dir" \( -type f -o -type d \) -print0 | sort -z | \
+			xargs -0 stat -c '%n %a'
+	) | sha1sum));
+	echo "$h";
 }

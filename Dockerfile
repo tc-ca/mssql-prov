@@ -1,7 +1,10 @@
 FROM mcr.microsoft.com/mssql/server:2017-latest
 
-ARG SA_PASSWORD
-ENV SA_PASSWORD=${SA_PASSWORD}
+ARG DB_USERNAME=SA
+ENV DB_USERNAME=${DB_USERNAME}
+
+ARG DB_PASSWORD
+ENV DB_PASSWORD=${DB_PASSWORD}
 
 ARG PATCH_HISTORY_DB=master
 ENV PATCH_HISTORY_DB=${PATCH_HISTORY_DB}
@@ -15,6 +18,8 @@ ENV DB_NAME=${DB_NAME}
 ENV ACCEPT_EULA=Y
 
 RUN mkdir /app
+RUN mkdir /app/provision/
+RUN mkdir /app/patch/
 COPY ./app/ /app/
 RUN chmod +x -R /app/*.sh
 
