@@ -62,7 +62,10 @@ function applyDir {
 	echo "Applying files in $1";
 	find "$1" -type f \( -name "*.sh" -o -name "*.sql" \) -print0 | sort -z |
 	while IFS= read -r -d '' file; do
-		case $file in
+		if ! [ -e "$file" ] ; then
+			continue;
+		fi
+		case "$file" in
 			*.sh)
 				echo "Discovered shell file $file";
 				source "$file";
